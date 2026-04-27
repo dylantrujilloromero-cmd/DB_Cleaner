@@ -986,6 +986,121 @@ from cliente;
 select nombre_cliente
 from cliente where pais = 'Spain';
 
+/* RETO F Retorna un listado con los distintos estados por los que puede pasar un pedido.*/
+SHOW TABLES;
+DESCRIBE pedido;
+SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega,
+estado, comentarios, codigo_cliente
+FROM pedido;
+SELECT DISTINCT estado
+FROM pedido;
+
+/* RETO G Genera un listado con el código de cliente de aquellos clientes que realizaron algún pago en 2008. Tenga en cuenta que deberá eliminar aquellos códigos de cliente que aparezcan repetidos. Resuelva la consulta*/
+SHOW TABLES;
+DESCRIBE pago;
+SELECT codigo_cliente, forma_pago, id_transaccion, 
+fecha_pago, total
+FROM pago;
+SELECT DISTINCT codigo_cliente
+FROM pago
+WHERE YEAR(fecha_pago) = 2008;
+
+
+
+/* RETO H Genera un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos que no han sido entregados a tiempo.*/
+SHOW TABLES;
+DESCRIBE pedido;
+SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega,
+estado, comentarios, codigo_cliente
+FROM pedido;
+SELECT codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega,
+DATEDIFF(fecha_entrega, fecha_esperada) AS dias_retraso
+FROM pedido
+WHERE DATEDIFF(fecha_entrega, fecha_esperada) > 0;
+
+/* RETO I Genera un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos cuya fecha de entrega ha sido al menos dos días antes de la fecha esperada*/
+SHOW TABLES;
+DESCRIBE pedido;
+SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega,
+estado, comentarios, codigo_cliente
+FROM pedido;
+SELECT codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
+FROM pedido
+WHERE DATEDIFF(fecha_esperada, fecha_entrega) >= 2;
+
+
+/* RETO J Genera un listado de todos los pedidos que fueron rechazados en 2009*/
+SHOW TABLES;
+DESCRIBE pedido;
+SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega,
+estado, comentarios, codigo_cliente
+FROM pedido;
+SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega,
+estado, comentarios, codigo_cliente
+FROM pedido
+WHERE estado = 'Rechazado'
+AND DATE_FORMAT(fecha_pedido, '%Y') = '2009';
+
+/* RETO K Genera un listado de todos los pedidos que han sido entregados en el mes de enero de cualquier año*/
+SHOW TABLES;
+DESCRIBE pedido;
+SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega,
+estado, comentarios, codigo_cliente
+FROM pedido;
+SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega,
+estado, comentarios, codigo_cliente
+FROM pedido
+WHERE estado = 'Entregado'
+AND MONTH(fecha_entrega) = 1;
+
+/*RETO L. Genera un listado con todos los pagos que se realizaron en el año 2008 mediante Paypal. Ordene el resultado de mayor a menor*/
+SHOW TABLES;
+DESCRIBE pago;
+SELECT codigo_cliente, forma_pago, id_transaccion, 
+fecha_pago, total
+FROM pago;
+SELECT codigo_cliente, forma_pago, id_transaccion, 
+fecha_pago, total
+FROM pago
+WHERE YEAR(fecha_pago) = 2008
+AND upper(forma_pago) = 'PAYPAL'
+ORDER BY total DESC;
+
+/* RETO M Genera un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas*/
+SHOW TABLES;
+DESCRIBE pago;
+SELECT codigo_cliente, forma_pago, id_transaccion, 
+fecha_pago, total
+FROM pago;
+SELECT DISTINCT forma_pago
+FROM pago;
+
+/*RETO N Genera un listado con todos los productos que pertenecen a la gama Ornamentales y que tienen más de 100 unidades en stock. El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar los de mayor precio*/
+SHOW TABLES;
+DESCRIBE producto;
+SELECT codigo_producto, nombre, gama, dimensiones, proveedor,
+descripcion, cantidad_en_stock, precio_venta, precio_proveedor
+FROM producto;
+SELECT codigo_producto, nombre, gama, cantidad_en_stock, precio_venta
+FROM producto
+WHERE gama = 'Ornamentales'
+AND cantidad_en_stock > 100
+ORDER BY precio_venta DESC;
+
+/*RETO O. Genera un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el código de empleado 11 o 30*/
+SHOW TABLES;
+DESCRIBE cliente;
+SELECT codigo_cliente, nombre_cliente, nombre_contacto,
+apellido_contacto, telefono, fax, linea_direccion1,
+linea_direccion2, ciudad, region, pais, codigo_postal,
+codigo_empleado_rep_ventas, limite_credito
+FROM cliente;
+SELECT codigo_cliente, nombre_cliente, nombre_contacto,
+apellido_contacto, ciudad, codigo_empleado_rep_ventas
+FROM cliente
+WHERE upper(ciudad) = 'MADRID'
+AND codigo_empleado_rep_ventas IN (11, 30);
+
 
 /* SENTENCIAS DML PARA PRÁCTICAR SIN MORIR EN EL INTENTO */
 /* EJEMPLO PARA CONOCER LAS COLUMNAS DE UNA TABLA*/
@@ -1050,5 +1165,5 @@ select count(*) total_registros /*cl.ciudad, em.codigo_empleado */
  where em.codigo_empleado = cl.codigo_empleado_rep_ventas
  and em.codigo_empleado in (11,30)
  group by cl.ciudad
- order by cl.ciudad desc; 
+ order by cl.ciudad desc;
 
