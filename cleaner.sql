@@ -1001,9 +1001,16 @@ DESCRIBE pago;
 SELECT codigo_cliente, forma_pago, id_transaccion, 
 fecha_pago, total
 FROM pago;
+
+/* Utilizando la función YEAR de MySQL */
 SELECT DISTINCT codigo_cliente
 FROM pago
 WHERE YEAR(fecha_pago) = 2008;
+
+/* Utilizando la función DATE_FORMAT de MySQL */
+SELECT DISTINCT codigo_cliente
+FROM pago
+WHERE DATE_FORMAT(fecha_pago, '%Y') = '2008';
 
 
 
@@ -1024,9 +1031,21 @@ DESCRIBE pedido;
 SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega,
 estado, comentarios, codigo_cliente
 FROM pedido;
+
+/* Utilizando la función DATEDIFF de MySQL */
 SELECT codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
 FROM pedido
 WHERE DATEDIFF(fecha_esperada, fecha_entrega) >= 2;
+
+/* Utilizando la función ADDDATE de MySQL */
+SELECT codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
+FROM pedido
+WHERE fecha_entrega <= ADDDATE(fecha_esperada, -2);
+
+/* Utilizando el operador de resta - */
+SELECT codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
+FROM pedido
+WHERE (fecha_esperada - fecha_entrega) >= 2;
 
 
 /* RETO J Genera un listado de todos los pedidos que fueron rechazados en 2009*/
